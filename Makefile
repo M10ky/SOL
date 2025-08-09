@@ -4,7 +4,7 @@ SRC = main.c	map.c	ft_utils.c get_next_line.c get_next_line_utils.c
 OBJ = $(SRC:.c=.o)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 MLX = -Lmlx -lmlx -lXext -lX11 -lm
 
 all: $(NAME)

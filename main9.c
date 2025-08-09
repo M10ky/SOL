@@ -5,99 +5,82 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: miokrako <miokrako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/09 22:42:11 by miokrako          #+#    #+#             */
-/*   Updated: 2025/08/09 22:42:21 by miokrako         ###   ########.fr       */
+/*   Created: 2025/07/21 15:19:09 by miokrako          #+#    #+#             */
+/*   Updated: 2025/08/09 22:40:14 by miokrako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 #include <errno.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdio.h>
-
-static void	cleanup_and_exit(t_data *data, int exit_code)
-{
-	if (data->win)
-		mlx_destroy_window(data->mlx, data->win);
-	if (data->mlx)
-	{
-		mlx_destroy_display(data->mlx);
-		free(data->mlx);
-	}
-	if (data->map)
-		free_map(data->map);
-	exit(exit_code);
-}
 
 int	main(int ac, char **av)
 {
-	t_data	data;
+	t_data	data = {0};
 	int		win_width = 0;
 	int		win_height = 0;
-	int		i = 0;
+	int i = 0;
 
-	// Initialisation complète de la structure
-	ft_bzero(&data, sizeof(t_data));
+	data.move_count = 0;
+	data.map = NULL;
 
 	// Gestion des arguments
 	if (ac != 2)
 	{
-		write(2, "Invalid Argument\n", 17);
+		// errno = (ac < 2) ? EINVAL : E2BIG;
+		// printf("Error \n%s\n", strerror(errno));
+		write(2,"Invalid Argument\n",17);
 		return (1);
 	}
 	else if (!check_map_extension(av[1]))
 	{
-		write(2, "Invalid Map Extension\n", 22);
+		//fprintf(stderr, "Erreur : le fichier doit avoir l'extension .ber\n");
+		write(2,"Invalid Map Extension\n",22);
 		return (1);
 	}
 
-	// Lecture de la carte
+		// Lecture de la carte avec get_next_line
 	data.map = read_map(av[1]);
 	if (!data.map)
-		cleanup_and_exit(&data, 1);
-
+	{
+		free(data.map);
+		return(0);
+	}
 	while (data.map[i])
 	{
 		printf("%s\n", data.map[i]);
 		i++;
 	}
+	if (!data.map)
+	{
+		perror("Erreur lecture carte");
+		free(data.map);
+		return (1);
+	}
 
 	// Validation de la carte
 	if (!validate_map(data.map))
-		cleanup_and_exit(&data, 1);
+		return (1);
 
-	// Initialisation MLX
+	// Initialisation fenêtre
 	data.mlx = mlx_init();
 	if (!data.mlx)
 	{
-		write(2, "Error init MLX\n", 15);
-		cleanup_and_exit(&data, 1);
+		write(2, "Error init MLX\n",15);
+		return (1);
 	}
 
-	// Calcul taille fenêtre
 	while (data.map[0][win_width])
 		win_width++;
 	while (data.map[win_height])
 		win_height++;
 
-	// Création fenêtre
 	data.win = mlx_new_window(data.mlx, win_width * TILE_SIZE, win_height * TILE_SIZE, "so_long");
-	if (!data.win)
-		cleanup_and_exit(&data, 1);
 
-	// Chargement et rendu
 	load_images(&data);
 	render_map(&data);
-
-	// Hooks
 	mlx_key_hook(data.win, handle_input, &data);
 	mlx_hook(data.win, 17, 0, exit_game, &data);
-
-	// Boucle MLX
 	mlx_loop(data.mlx);
 
-	// Nettoyage après boucle (normalement jamais atteint sauf exit())
-	cleanup_and_exit(&data, 0);
+	return (0);
 }

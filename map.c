@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miokrako <miokyrakotoarivelo@gmail.com>    +#+  +:+       +#+        */
+/*   By: miokrako <miokrako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 12:35:12 by miokrako          #+#    #+#             */
-/*   Updated: 2025/07/23 17:42:03 by miokrako         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:32:40 by miokrako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "so_long.h"
-#include "get_next_line.h"
-#include "mlx/mlx.h"
-
-#define MAX_LINES 100
-#define MAX_LINE_LENGTH 1024
 
 // char	**read_map(const char *filename)
 // {
@@ -91,7 +85,7 @@ char **read_map(const char *filename)
 	fd = open(filename, O_RDONLY);
 	if (fd < 0)
 	{
-		perror("Erreur à la réouverture");
+		perror("Error\n");
 		return (NULL);
 	}
 	int i = 0;
@@ -154,6 +148,11 @@ void	load_images(t_data *data)
 	data->img_floor = mlx_xpm_file_to_image(data->mlx, "textures/floor.xpm", &w, &h);
 	data->img_player = mlx_xpm_file_to_image(data->mlx, "textures/fplayer.xpm", &w, &h);
 	data->img_exit = mlx_xpm_file_to_image(data->mlx, "textures/close.xpm", &w, &h);
+	if(!data->img_exit)
+	{
+		write (2, "Error\nImages\n", 13);
+		exit(1);
+	}
 	data->img_exit_open = mlx_xpm_file_to_image(data->mlx, "textures/open.xpm", &w, &h);
 	data->img_collectible = mlx_xpm_file_to_image(data->mlx, "textures/Collect.xpm", &w, &h);
 }

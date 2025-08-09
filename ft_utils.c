@@ -3,20 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miokrako <miokyrakotoarivelo@gmail.com>    +#+  +:+       +#+        */
+/*   By: miokrako <miokrako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 15:55:39 by miokrako          #+#    #+#             */
-/*   Updated: 2025/07/23 18:13:11 by miokrako         ###   ########.fr       */
+/*   Updated: 2025/08/09 22:30:53 by miokrako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include "get_next_line.h"
 
 int	handle_input(int keycode, t_data *data)
 {
 	if (keycode == 65307)
+	{
 		exit_game(&data);
+		close_window(data);
+		destroy_images(data);
+
+	}
 	else if (keycode == 119)
 		move_player(data, -1, 0);
 	else if (keycode == 115)
@@ -108,25 +112,26 @@ int validate_map(char **map)
 {
     if (!is_rectangular(map))
     {
-        printf("Erreur : carte non rectangulaire\n");
+        printf("Map his not rectangular\n");
 		free_map(map);
 		return (0);
     }
     if (!has_required_elements(map))
     {
-        printf("Erreur : éléments P/C/E invalides ou caractères inconnus\n");
+        //printf("Map Error : invlid P/C/E \n");
+		write(2,"Map Error : invlid P/C/E \n",26);
 		free_map(map);
 		return (0);
     }
 	if (!is_surrounded_by_walls(map))
 	{
-		printf("Erreur : carte non entourée de murs\n");
+		printf("Map Error : wall\n");
 		free_map(map);
 		return (0);
 	}
 	if (!is_map_reachable(map))
 	{
-		printf("Erreur : tous les objets ou la sortie ne sont pas accessibles\n");
+		printf("Map Error : no acces to all collect\n");
 		free_map(map);
 		return (0);
 	}
@@ -173,19 +178,24 @@ void	move_player(t_data *data, int drow, int dcol)
 	if (target == 'E')
 	{
 		int remaining = count_collectibles(data);
+
 		if (remaining > 0)
 		{
-			//printf("🚫 Il reste %d objets à ramasser avant de sortir !\n", remaining);
+			//printf(" Il reste %d objets à ramasser avant de sortir !\n", remaining);
 			return;
 		}
 		else
 		{
-			//printf("🎉 Bravo, tu as ramassé tous les objets et atteint la sortie !\n");
+
+			exit_game(&data);
+			destroy_images(data);
+			mlx_destroy_window((data)->mlx, (data)->win);
+			//printf("Bravo, tu as ramassé tous les objets et atteint la sortie !\n");
 		}
 	}
 
-	if (target == 'C')
-		printf("🧺 Tu as ramassé un objet !\n");
+	// if (target == 'C')
+	// 	printf("Tu as ramassé un objet !\n");
 
 	data->map[row][col] = '0';
 	data->map[new_r][new_c] = 'P';
@@ -196,7 +206,13 @@ void	move_player(t_data *data, int drow, int dcol)
 
 	render_map(data);
 	if (target == 'E')
-		exit(0);
+	{
+		//destroy_images(data);
+		//exit(0);
+		//exit_game(&data);
+		//mlx_destroy_window((data)->mlx, (data)->win);
+		close_window(data);
+	}
 }
 
 int count_collectibles(t_data *data)
@@ -260,8 +276,7 @@ void	flood_fill(char **map, int row, int col)
     flood_fill(map, row, col - 1);
 }
 
-int	
-check_flood_fill(char **map)
+int	check_flood_fill(char **map)
 {
 	int i = 0, j;
 

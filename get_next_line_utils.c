@@ -6,11 +6,11 @@
 /*   By: miokrako <miokrako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:44:27 by miokrako          #+#    #+#             */
-/*   Updated: 2025/07/21 13:56:42 by miokrako         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:36:49 by miokrako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "so_long.h"
 
 size_t	ft_strlen(const char *str)
 {

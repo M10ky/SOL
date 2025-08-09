@@ -6,11 +6,11 @@
 /*   By: miokrako <miokrako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:44:30 by miokrako          #+#    #+#             */
-/*   Updated: 2025/07/22 15:36:24 by miokrako         ###   ########.fr       */
+/*   Updated: 2025/08/09 17:31:16 by miokrako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "so_long.h"
 
 static char	*join_free(char *buffer, char *buf)
 {
