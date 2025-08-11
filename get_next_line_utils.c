@@ -6,11 +6,12 @@
 /*   By: miokrako <miokrako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/09 09:44:27 by miokrako          #+#    #+#             */
-/*   Updated: 2025/08/09 17:36:49 by miokrako         ###   ########.fr       */
+/*   Updated: 2025/08/11 20:48:21 by miokrako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+#include <stdlib.h>
 
 size_t	ft_strlen(const char *str)
 {
@@ -40,29 +41,18 @@ char	*ft_strchr(const char *s, int c)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	int		len;
 	char	*res;
-	int		i;
-	int		j;
+	char	*str;
 
-	i = 0;
-	len = ft_strlen(s1) + ft_strlen(s2);
-	res = malloc(sizeof(char) * (len + 1));
-	if (!res || !s1 || !s2)
+	res = malloc(sizeof(*res) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if ((!s1 && !s2) || !res)
 		return (NULL);
-	while (s1[i] != 0)
-	{
-		res[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (s2[j] != 0)
-	{
-		res[i] = s2[j];
-		i++;
-		j++;
-	}
-	res[len] = 0;
+	str = res;
+	while (*s1)
+		*str++ = *s1++;
+	while (*s2)
+		*str++ = *s2++;
+	*str = '\0';
 	return (res);
 }
 

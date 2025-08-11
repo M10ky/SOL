@@ -3,7 +3,17 @@ valg no file 				OK
 valg arg 					OK
 map Error 					OK
 error init 					OK
-valg exit apres run
-valg map invalid
-valg fin jeu
-MESSAGE ERROR
+valg exit apres run			OK
+valg map invalid			OK
+valg fin jeu				OK
+map vide					OK
+MESSAGE ERROR				OK
+if(!data->img)				OK
+\N							OK
+extension fichier cacher	OK
+norminette					OK
+manala fflush				OK
+6 fonction					OK
+nom fichier					OK
+Makefile					OK
+renommer map				KO
